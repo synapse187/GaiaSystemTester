@@ -1,0 +1,29 @@
+﻿<UserControl
+    x:Class="GaiaSystemTester.StatsFrame"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:local="using:GaiaSystemTester"
+    mc:Ignorable="d"
+    >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../StyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+        <StackPanel>
+            <Slider x:Name="p1HealthStepSlider" Style="{StaticResource SubStatSlider}"/>
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="Health:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+            <muxc:NumberBox x:Name="p1Health" Tag="Health" Value="5" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
