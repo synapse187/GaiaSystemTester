@@ -129,6 +129,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectedCharacter.cs" />
     <Compile Include="Sim\DiceRoller.cs" />
     <Compile Include="Sim\RunIterations.cs" />
     <Compile Include="Sim\RunSim.cs" />

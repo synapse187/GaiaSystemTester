@@ -34,10 +34,10 @@
                 <TextBox x:Name="CharacterToAddNameTextBox" Header="Character Name" Text="Character 01"/>
             </StackPanel>
             <!--Add Character-->
-            <ListView x:Name="CharactersListView" Grid.Column="1" IsItemClickEnabled="True" SelectedItem="{x:Bind SelectedCharacter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{x:Bind Path=CharacterSheets, Mode=OneWay}" SelectionChanged="CharactersListView_ItemClick">
+            <ListView x:Name="CharactersListView" Grid.Column="1" IsItemClickEnabled="True" SelectionMode="Single" ItemsSource="{x:Bind Path=CharacterSheets, Mode=OneWay}" SelectionChanged="CharactersListView_ItemClick">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:CharacterSheet">
-                        <TextBlock Text="{x:Bind CharBio.Name, Mode=TwoWay}"/>
+                        <TextBlock Text="{x:Bind CharBio.Name, Mode=OneWay}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -85,7 +85,7 @@
                             <!--Pool-->
                             <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
                                 <TextBlock Text="Physical&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
-                                <muxc:NumberBox x:Name="PhysicalPoolNumberBox" Tag="PhysicalPool" Value="{x:Bind CharSheet.CharStats.Strength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
+                                <muxc:NumberBox x:Name="PhysicalPoolNumberBox" Tag="PhysicalPool" Value="{x:Bind SelectedCharacter.CurentCharacter.CharStats.PhysicalPool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
                             </StackPanel>
                             <!--END Pool-->
                             <!--Super Stat 01-->
@@ -361,7 +361,7 @@
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Health:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Health" Tag="Health" ValueChanged="ValueChanged" Value="{x:Bind SelectedCharacter.CharStatsQuick.Health, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                <muxc:NumberBox x:Name="p1Health" Tag="Health" ValueChanged="ValueChanged" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Health, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
                             </StackPanel>
                         </StackPanel>
                         <!--END Health-->

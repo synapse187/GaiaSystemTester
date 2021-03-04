@@ -29,34 +29,26 @@ namespace GaiaSystemTester
             this.InitializeComponent();
             this.CharSheet = new CharacterSheet();
             this.SimSettings = new SimSettings();
-            Globals.AddCharacterSheet();
-            //Globals.AddCharacterSheet();
+            this.SelectedCharacter = new SelectedCharacter();
+            this.CharacterSheets = new ObservableCollection<CharacterSheet>();
+            CharacterSheets.Add(new CharacterSheet("Fulkan"));
             }
-        public ObservableCollection<CharacterSheet> CharacterSheets { get; set; } = Globals.GlobalSheets;
+        public IList<CharacterSheet> CharacterSheets { get; set; }
         public CharacterSheet CharSheet { get; set; }
         public SimSettings SimSettings { get; set; }
-        public int IndexToGet { get; set; }
-        public CharacterSheet SelectedCharacter
-        {
-            get {
-                return CharacterSheets[IndexToGet];
-            }
-            set
-                {
-                if(CharacterSheets[IndexToGet] != value)
-                    {
-                    CharacterSheets[IndexToGet] = value;
-                    }
-                }
-        }
+        public int CharacterIndexToGet = 0;
+        public SelectedCharacter SelectedCharacter { get; set; }
+
+
+
         private void NumberBoxValueChanged(MUXC.NumberBox sender, MUXC.NumberBoxValueChangedEventArgs args)
             {
-            if(CharSheet != null)
-                {
-                string outString;
-                outString = $"{sender.Tag.ToString()}:  {sender.Value}\n";
-                TextBoxOutputWindow.Text += outString;
-                }
+            //if(CharSheet != null)
+            //    {
+            //    string outString;
+            //    outString = $"{sender.Tag.ToString()}:  {sender.Value}\n";
+            //    TextBoxOutputWindow.Text += outString;
+            //    }
             }
 
         private void StatsSelectToggleSwitch_Toggled(Object sender, RoutedEventArgs e)
@@ -77,7 +69,7 @@ namespace GaiaSystemTester
             
         private void ValueChanged(MUXC.NumberBox sender, MUXC.NumberBoxValueChangedEventArgs args)
             {
-            TextBoxOutputWindow.Text += CharacterSheets[0].CharStatsQuick.Health.ToString();
+            //TextBoxOutputWindow.Text += CharacterSheets[0].CharStatsQuick.Health.ToString();
             }
 
         private void RunSim(object sender, RoutedEventArgs e)
@@ -88,13 +80,12 @@ namespace GaiaSystemTester
 
         private void Button_Click(object sender, RoutedEventArgs e)
             {
-            TextBox box = TextBoxOutputWindow;
-            box.Text += ($"Health: {CharacterSheets[0].CharStatsQuick.Health.ToString()}");
-            box.Text += ($"Endurance: {CharacterSheets[0].CharStatsQuick.Endurance.ToString()}");
-            box.Text += ($"Pool: {CharacterSheets[0].CharStatsQuick.Pool.ToString()}");
-            box.Text += ($"Target: {CharacterSheets[0].CharStatsQuick.Target.ToString()}");
-            box.Text += ($"Accuracy: {CharacterSheets[0].CharStatsQuick.Accuracy.ToString()}");
-            box.Text += ($"Damage: {CharacterSheets[0].CharStatsQuick.Damage.ToString()}");
+            foreach(CharacterSheet item in CharacterSheets)
+                {
+                TextBoxOutputWindow.Text += $"Char: {item.CharBio.Name}\n";
+                TextBoxOutputWindow.Text += $"Health: {item.CharStatsQuick.Health}-Endurance: {item.CharStatsQuick.Endurance}\n";
+                }
+            TextBoxOutputWindow.Text += SelectedCharacter.CurentCharacter.CharBio.Name;
             }
 
         private void AddCharacter(object sender, RoutedEventArgs e)
@@ -106,24 +97,9 @@ namespace GaiaSystemTester
 
         private void CharactersListView_ItemClick(object sender, SelectionChangedEventArgs e)
             {
-            ListView listView = (ListView)sender;
-            if(listView.SelectedIndex > 0)
-                {
-                Binding binding = new Binding();
-                IndexToGet = listView.SelectedIndex;
-                binding.Source = SelectedCharacter.StatsToUse;
-                P1StatsSelectToggleSwitch.IsOn = SelectedCharacter.StatsToUse;
-                P1StatsSelectToggleSwitch.SetBinding(ToggleSwitch.IsOnProperty, binding);
-                }
-            TextBoxOutputWindow.Text += "Current Selected Index: " + listView.SelectedIndex + "\n";
-            outputToWindow();
+            ListView view = (ListView)sender;
+            SelectedCharacter.CurentCharacter = CharacterSheets[view.SelectedIndex];
+            TextBoxOutputWindow.Text += $"SelectedCharacter IS: {SelectedCharacter.CurentCharacter.CharBio.Name}\n";
             }
-        private void outputToWindow()
-        {
-            foreach(CharacterSheet sheet in CharacterSheets)
-                {
-                TextBoxOutputWindow.Text += $"{sheet.CharBio.Name}'s StatsToUse: {sheet.StatsToUse}\n";
-                }
-        }
         }
     }

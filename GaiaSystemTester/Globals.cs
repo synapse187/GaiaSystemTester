@@ -15,9 +15,9 @@ namespace GaiaSystemTester
             get { return _globalSheets; }
             set { _globalSheets = value; }
             }
-        public static void AddCharacterSheet()
+        public static void AddCharacterSheet(string name = "Character")
         {
-            CharacterSheet sheet = new CharacterSheet();
+            CharacterSheet sheet = new CharacterSheet(name);
             _globalSheets.Add(sheet);
         }
         }
