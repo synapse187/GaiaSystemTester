@@ -4,26 +4,34 @@ using Windows.UI.Xaml.Controls;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static GaiaSystemTester.Sim.GLOBAL;
 
-namespace GaiaSystemTester
+
+namespace GaiaSystemTester.Sim
     {
     public class RunSim
         {
-        public void RunSimulation(List<CharacterSheet> characterSheetsToUse, SimSettings simSettings, ref TextBox textBoxOutputWindow)
-            {
-            switch(simSettings.SimulationType)
+        private List<int> statsBackup = new List<int>();
+        public void RunSimulation()
+        {
+            BackupStats();
+            RunSteps runSteps = new RunSteps();
+            runSteps.RunSimSteps();
+            ResetStats();
+        }
+        private void BackupStats()
+        {
+            foreach(CharacterSheet sheet in _CharacterSheets)
                 {
-                case 0:
-                    SimQuick sim = new SimQuick();
-                    sim.RunSimulation(characterSheetsToUse, simSettings, ref textBoxOutputWindow);
-                    break;
-                case 1:
-                    SimQuickCombat sim2 = new SimQuickCombat();
-                    sim2.RunSimulation(characterSheetsToUse, simSettings, ref textBoxOutputWindow);
-                    break;
-                default:
-                    break;
+                sheet.BackupStats();
+                }
+        }
+        private void ResetStats()
+        {
+            foreach(CharacterSheet sheet in _CharacterSheets)
+                {
+                sheet.RestoreStats();
                 }
             }
-        }
+    }
     }

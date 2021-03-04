@@ -36,7 +36,6 @@ namespace GaiaSystemTester
         public IList<CharacterSheet> CharacterSheets { get; set; }
         public CharacterSheet CharSheet { get; set; }
         public SimSettings SimSettings { get; set; }
-        public int CharacterIndexToGet = 0;
         public SelectedCharacter SelectedCharacter { get; set; }
 
 
@@ -74,18 +73,13 @@ namespace GaiaSystemTester
 
         private void RunSim(object sender, RoutedEventArgs e)
             {
-            //DiceRoller diceRoller = new DiceRoller(CharacterSheets.ToList<CharacterSheet>, SimSettings, ref TextBoxOutputWindow);
-            //diceRoller.RunSimulation();
+            Sim.DiceRoller diceRoller = new Sim.DiceRoller(CharacterSheets, SimSettings, textBoxOutputWindow: ref TextBoxOutputWindow);
+            diceRoller.RunSimulation();
             }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ClearWindowButton_Click(object sender, RoutedEventArgs e)
             {
-            foreach(CharacterSheet item in CharacterSheets)
-                {
-                TextBoxOutputWindow.Text += $"Char: {item.CharBio.Name}\n";
-                TextBoxOutputWindow.Text += $"Health: {item.CharStatsQuick.Health}-Endurance: {item.CharStatsQuick.Endurance}\n";
-                }
-            TextBoxOutputWindow.Text += SelectedCharacter.CurentCharacter.CharBio.Name;
+            TextBoxOutputWindow.Text = "";
             }
 
         private void AddCharacter(object sender, RoutedEventArgs e)
@@ -98,8 +92,42 @@ namespace GaiaSystemTester
         private void CharactersListView_ItemClick(object sender, SelectionChangedEventArgs e)
             {
             ListView view = (ListView)sender;
-            SelectedCharacter.CurentCharacter = CharacterSheets[view.SelectedIndex];
-            TextBoxOutputWindow.Text += $"SelectedCharacter IS: {SelectedCharacter.CurentCharacter.CharBio.Name}\n";
+            if(view.SelectedIndex >= 0 && view.SelectedIndex <= CharacterSheets.Count)
+                {
+                SelectedCharacter.CurentCharacter = CharacterSheets[view.SelectedIndex];
+                PlayerStatsPannelContentControl.IsEnabled = true;
+                }
+            else if(CharacterSheets.Count == 0)
+                {
+                SelectedCharacter.CurentCharacter = null;
+                PlayerStatsPannelContentControl.IsEnabled = false;
+                }
+            else
+                {
+                SelectedCharacter.CurentCharacter = CharacterSheets[0];
+                PlayerStatsPannelContentControl.IsEnabled = true;
+                }
+            }
+
+        private void Remove_Character_Button_Click(object sender, RoutedEventArgs e)
+            {
+            if(CharacterSheets.Count == 1 || CharactersListView.SelectedIndex <= 0)
+                {
+                CharacterSheets.RemoveAt(CharactersListView.SelectedIndex);
+                SelectedCharacter.CurentCharacter = null;
+                PlayerStatsPannelContentControl.IsEnabled = false;
+                }
+            else if(CharacterSheets.Count > 1 && CharactersListView.SelectedIndex <= 0)
+                {
+                CharacterSheets.RemoveAt(CharactersListView.SelectedIndex);
+                SelectedCharacter.CurentCharacter = CharacterSheets[0];
+                PlayerStatsPannelContentControl.IsEnabled = true;
+                }
+            else
+                {
+                SelectedCharacter.CurentCharacter = null;
+                PlayerStatsPannelContentControl.IsEnabled = false;
+                }
             }
         }
     }

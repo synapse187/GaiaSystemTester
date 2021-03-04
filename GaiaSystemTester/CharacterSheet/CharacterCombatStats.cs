@@ -19,7 +19,7 @@ namespace GaiaSystemTester
             _currentAccuracy = 10;
             _currentDamage = 10;
             _currentSuccesses = 0;
-
+            _totalSuccesses = 0;
             }
         private int _currentHealth;
         private int _currentEndurance;
@@ -30,6 +30,7 @@ namespace GaiaSystemTester
 
         private List<int> _currentRolledPool;
         private int _currentSuccesses;
+        private int _totalSuccesses;
 
         public int CurrentHealth
             {
@@ -126,6 +127,18 @@ namespace GaiaSystemTester
                     {
                     _currentSuccesses = value;
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentSuccesses"));
+                    }
+                }
+            }
+
+        public int TotalSuccesses
+            {
+            get { return _totalSuccesses; }
+            set
+                {
+                if(value != _totalSuccesses)
+                    {
+                    _totalSuccesses = value;
                     }
                 }
             }

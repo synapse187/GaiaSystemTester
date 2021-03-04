@@ -32,6 +32,8 @@
                 <TextBlock Text="ADD CHARACTER!"/>
                 <Button Click="AddCharacter"  Content="Add Character"/>
                 <TextBox x:Name="CharacterToAddNameTextBox" Header="Character Name" Text="Character 01"/>
+                <TextBlock Text="Remove Selected Character"/>
+                <Button Click="Remove_Character_Button_Click" Content="Remove Selected"/>
             </StackPanel>
             <!--Add Character-->
             <ListView x:Name="CharactersListView" Grid.Column="1" IsItemClickEnabled="True" SelectionMode="Single" ItemsSource="{x:Bind Path=CharacterSheets, Mode=OneWay}" SelectionChanged="CharactersListView_ItemClick">
@@ -42,416 +44,440 @@
                 </ListView.ItemTemplate>
             </ListView>
             <!--Player 01 Block-->
-            <StackPanel Width="255" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,5,0,0">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Player 01 Stat Select: " VerticalAlignment="Center"/>
-                    <ToggleSwitch x:Name="P1StatsSelectToggleSwitch" Toggled="StatsSelectToggleSwitch_Toggled" OnContent="Standard" OffContent="Quick"/>
-                </StackPanel>
-                <!--Information Block-->
-                <TextBox Header="Player 1 Name:" TextAlignment="Center" Text="Player 01"></TextBox>
-                <!--END Information Block-->
-                <!--Standard Stats Panel-->
-                <StackPanel x:Name="P1StandardStatsPanel" Visibility="Collapsed">
-                    <!--Physical Grid-->
-                    <StackPanel BorderBrush="Black" BorderThickness="1">
-                        <TextBlock Text="Physical Stats:" Style="{StaticResource StandardStatHeadderTextBlock}"/>
-                        <Grid Width="250" Height="auto">
+            <ContentControl x:Name="PlayerStatsPannelContentControl" Grid.Column="2" IsEnabled="True">
+                <StackPanel x:Name="PlayerStatsStackPanel" Width="255" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,5,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Character Stat Type: " VerticalAlignment="Center"/>
+                        <ToggleSwitch Toggled="StatsSelectToggleSwitch_Toggled" IsOn="{x:Bind Path=SelectedCharacter.CurentCharacter.StatsToUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" OnContent="Standard" OffContent="Quick"/>
+                    </StackPanel>
+                    <!--Information Block-->
+                    <TextBox Header="Player 1 Name:" TextAlignment="Center" Text="{x:Bind Path=SelectedCharacter.CurentCharacter.CharBio.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <!--END Information Block-->
+                    <!--Standard Stats Panel-->
+                    <StackPanel x:Name="P1StandardStatsPanel" Visibility="Collapsed">
+                        <!--Physical Grid-->
+                        <StackPanel BorderBrush="Black" BorderThickness="1">
+                            <TextBlock Text="Physical Stats:" Style="{StaticResource StandardStatHeadderTextBlock}"/>
+                            <Grid Width="250" Height="auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition Height="55"/>
+                                </Grid.RowDefinitions>
+                                <!--IconLayout-->
+                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Canvas Width="Auto">
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline01}"/>
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline02}"/>
+                                        <Polyline Style="{StaticResource SupStatToPoolStatPolyline01}"/>
+                                    </Canvas>
+                                </StackPanel>
+                                <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Canvas Width="Auto" Height="110">
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline03}" />
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline04}" />
+                                        <Polyline Style="{StaticResource SupStatToPoolStatPolyline02}"/>
+                                    </Canvas>
+                                </StackPanel>
+                                <!--END Icon Layout-->
+                                <!--Pool-->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
+                                    <TextBlock Text="Physical&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
+                                    <muxc:NumberBox x:Name="PhysicalPoolNumberBox" Tag="PhysicalPool" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.PhysicalPool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Pool-->
+                                <!--Super Stat 01-->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource SupStatStackPannel}">
+                                    <TextBlock Text="Body:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Body" Tag="Body" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Body, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Super Stat 01-->
+                                <!--Sub Stat 01-->
+                                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1StrengthStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepStrength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Strength:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Strength" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Strength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 01-->
+                                <!--Sub Stat 02-->
+                                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1ToughnessStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepToughness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Toughness:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Toughness" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Toughness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 02-->
+                                <!--Super Stat 02-->
+                                <StackPanel Grid.Column="1" Grid.Row="2 " Style="{StaticResource SupStatStackPannel}">
+                                    <TextBlock Text="Agility:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Agility" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Agility, Mode=OneWay}" Tag="Agility" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Super Stat 02-->
+                                <!--Sub Stat 03-->
+                                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1ReflexesStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepReflexes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Reflexes:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Reflexes" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Reflexes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 03-->
+                                <!--Coordination-->
+                                <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1CoordinationStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepCoordination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Coordination:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Coordination" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Coordination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Coordination-->
+                                <!--END Sub Stats 02-->
+                            </Grid>
+                        </StackPanel>
+                        <!--END Physical Grid-->
+                        <!--Mental Grid-->
+                        <StackPanel>
+                            <TextBlock Text="Mental Stats:" Style="{StaticResource StandardStatHeadderTextBlock}"/>
+                            <Grid Width="250" Height="auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition Height="55"/>
+                                </Grid.RowDefinitions>
+                                <!--IconLayout-->
+                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Canvas Width="Auto" Height="110">
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline05}"/>
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline06}"/>
+                                        <Polyline Style="{StaticResource SupStatToPoolStatPolyline03}"/>
+                                    </Canvas>
+                                </StackPanel>
+                                <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Canvas Width="Auto" Height="110">
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline07}" />
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline08}" />
+                                        <Polyline Style="{StaticResource SupStatToPoolStatPolyline04}"/>
+                                    </Canvas>
+                                </StackPanel>
+                                <!--END Icon Layout-->
+                                <!--Pool-->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
+                                    <TextBlock Text="Mental&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
+                                    <muxc:NumberBox x:Name="MentalPoolNumberBox" Tag="MentalPool" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.MentalPool, Mode=TwoWay}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Pool-->
+                                <!--Super Stat 01-->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource SupStatStackPannel}">
+                                    <TextBlock Text="Mind:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Mind" Tag="Mind" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Mind, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Super Stat 01-->
+                                <!--Sub Stat 01-->
+                                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1IntelligenceStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepIntelligence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Intelligence:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Intelligence" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Intelligence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 01-->
+                                <!--Sub Stat 02-->
+                                <StackPanel Grid.Column="0" Grid.Row="1 " Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1EgoStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepEgo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Ego:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Ego" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Ego, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 02-->
+                                <!--Super Stat 02-->
+                                <StackPanel Grid.Column="1" Grid.Row="2" Style="{StaticResource SupStatStackPannel}">
+                                    <TextBlock Text="Willpower:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Willpower" Tag="Mind" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Willpower, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Super Stat 02-->
+                                <!--Sub Stat 01-->
+                                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1KnowledgeStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepKnowledge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Knowledge:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Knowledge" Tag="Knowledge" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Knowledge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 01-->
+                                <!--Sub Stat 02-->
+                                <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1SelfDisciplineStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepSelfDiscipline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Self Discipline:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1SelfDiscipline" Tag="SelfDiscipline" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.SelfDiscipline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Sub Stat 02-->
+                            </Grid>
+                        </StackPanel>
+                        <!--END Mental Grid-->
+                        <!--Magic Grid-->
+                        <StackPanel>
+                            <TextBlock Text="Meta Stats:" Style="{StaticResource StandardStatHeadderTextBlock}"/>
+                            <Grid Width="250" Height="auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition Height="55"/>
+                                    <RowDefinition Height="55"/>
+                                </Grid.RowDefinitions>
+                                <!--IconLayout-->
+                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Canvas Width="Auto" Height="110">
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline09}"/>
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline10}"/>
+                                        <Polyline Style="{StaticResource SupStatToPoolStatPolyline05}"/>
+                                    </Canvas>
+                                </StackPanel>
+                                <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Canvas Width="Auto" Height="110">
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline11}" />
+                                        <Polyline Style="{StaticResource SubStatToSupStatPolyline12}" />
+                                        <Polyline Style="{StaticResource SupStatToPoolStatPolyline06}"/>
+                                    </Canvas>
+                                </StackPanel>
+                                <!--END Icon Layout-->
+                                <!--Pool-->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
+                                    <TextBlock Text="Meta&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
+                                    <muxc:NumberBox x:Name="MetaPoolNumberBox" Tag="MetaPool" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.MetaPool, Mode=TwoWay}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Pool-->
+                                <!--Super Stat 01-->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource SupStatStackPannel}">
+                                    <TextBlock Text="Power:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Power" Tag="Mind" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Power, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Super Stat 01-->
+                                <!--Force-->
+                                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1ForceStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepForce, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Force:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Force" Tag="Force" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Force, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Force-->
+                                <!--Channeling-->
+                                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1ChannelingStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepChanneling, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Channeling:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Channeling" Tag="Channeling" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Channeling, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Channeling-->
+                                <!--Super Stat 02-->
+                                <StackPanel Grid.Column="1" Grid.Row="2" Style="{StaticResource SupStatStackPannel}">
+                                    <TextBlock Text="Control:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Control" Tag="Mind" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Control, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                                <!--END Super Stat 02-->
+                                <!--Manipulation-->
+                                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1ManipulationStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepManipulation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Manipulation:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Manipulation" Tag="Manipulation" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Manipulation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Manipulation-->
+                                <!--Reserve-->
+                                <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                    <StackPanel>
+                                        <Slider x:Name="p1ReserveStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepReserve, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Reserve:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                        <muxc:NumberBox x:Name="p1Reserve" Tag="Reserve" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStats.Reserve, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    </StackPanel>
+                                </StackPanel>
+                                <!--END Reserve-->
+                            </Grid>
+                        </StackPanel>
+                        <!--END Magic Grid-->
+                    </StackPanel>
+                    <!--END Standard Stats Panel-->
+                    <!--Quick Stats Settings-->
+                    <StackPanel x:Name="P1QuickStatsPanel" Visibility="Visible">
+                        <TextBlock>Quick Stats</TextBlock>
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="123"/>
+                                <ColumnDefinition Width="123"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="55"/>
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="55"/>
                             </Grid.RowDefinitions>
-                            <!--IconLayout-->
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                <Canvas Width="Auto">
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline01}"/>
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline02}"/>
-                                    <Polyline Style="{StaticResource SupStatToPoolStatPolyline01}"/>
-                                </Canvas>
-                            </StackPanel>
-                            <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                <Canvas Width="Auto" Height="110">
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline03}" />
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline04}" />
-                                    <Polyline Style="{StaticResource SupStatToPoolStatPolyline02}"/>
-                                </Canvas>
-                            </StackPanel>
-                            <!--END Icon Layout-->
-                            <!--Pool-->
-                            <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
-                                <TextBlock Text="Physical&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
-                                <muxc:NumberBox x:Name="PhysicalPoolNumberBox" Tag="PhysicalPool" Value="{x:Bind SelectedCharacter.CurentCharacter.CharStats.PhysicalPool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Pool-->
-                            <!--Super Stat 01-->
-                            <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource SupStatStackPannel}">
-                                <TextBlock Text="Body:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Body" Tag="Body" Value="{x:Bind CharSheet.CharStats.Body, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Super Stat 01-->
-                            <!--Sub Stat 01-->
+                            <!--Health-->
                             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
                                 <StackPanel>
-                                    <Slider x:Name="p1StrengthStepSlider" Style="{StaticResource SubStatSlider}"/>
+                                    <Slider x:Name="p1HealthStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepHealth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="Strength:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Strength" Value="{x:Bind CharSheet.CharStats.Strength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    <TextBlock Text="Health:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Health" Tag="Health" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Health, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
                                 </StackPanel>
                             </StackPanel>
-                            <!--END Sub Stat 01-->
-                            <!--Sub Stat 02-->
+                            <!--END Health-->
+                            <!--Endurance-->
+                            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                                <StackPanel>
+                                    <Slider x:Name="p1EnduranceStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepEndurance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Endurance:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Endurance" Tag="Endurance" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Endurance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                </StackPanel>
+                            </StackPanel>
+                            <!--END Endurance-->
+                            <!--Pool-->
                             <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
                                 <StackPanel>
-                                    <Slider x:Name="p1ToughnessStepSlider" Style="{StaticResource SubStatSlider}"/>
+                                    <Slider x:Name="p1PoolStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepPool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="Toughness:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Toughness" Value="{x:Bind CharSheet.CharStats.Toughness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    <TextBlock Text="Pool:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Pool" Tag="Pool" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Pool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
                                 </StackPanel>
-                            </StackPanel>
-                            <!--END Sub Stat 02-->
-                            <!--Super Stat 02-->
-                            <StackPanel Grid.Column="1" Grid.Row="2 " Style="{StaticResource SupStatStackPannel}">
-                                <TextBlock Text="Agility:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Agility" Value="{x:Bind CharSheet.CharStats.Agility, Mode=OneWay}" Tag="Agility" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Super Stat 02-->
-                            <!--Sub Stat 03-->
-                            <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                                <StackPanel>
-                                    <Slider x:Name="p1ReflexesStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Reflexes:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Reflexes" Value="{x:Bind CharSheet.CharStats.Reflexes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                                </StackPanel>
-                            </StackPanel>
-                            <!--END Sub Stat 03-->
-                            <!--Coordination-->
-                            <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                                <StackPanel>
-                                    <Slider x:Name="p1CoordinationStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Coordination:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Coordination" Value="{x:Bind CharSheet.CharStats.Coordination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                                </StackPanel>
-                            </StackPanel>
-                            <!--END Coordination-->
-                            <!--END Sub Stats 02-->
-                        </Grid>
-                    </StackPanel>
-                    <!--END Physical Grid-->
-                    <!--Mental Grid-->
-                    <StackPanel>
-                        <TextBlock Text="Mental Stats:" Style="{StaticResource StandardStatHeadderTextBlock}"/>
-                        <Grid Width="250" Height="auto">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="55"/>
-                                <RowDefinition Height="55"/>
-                                <RowDefinition Height="55"/>
-                            </Grid.RowDefinitions>
-                            <!--IconLayout-->
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                <Canvas Width="Auto" Height="110">
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline05}"/>
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline06}"/>
-                                    <Polyline Style="{StaticResource SupStatToPoolStatPolyline03}"/>
-                                </Canvas>
-                            </StackPanel>
-                            <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                <Canvas Width="Auto" Height="110">
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline07}" />
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline08}" />
-                                    <Polyline Style="{StaticResource SupStatToPoolStatPolyline04}"/>
-                                </Canvas>
-                            </StackPanel>
-                            <!--END Icon Layout-->
-                            <!--Pool-->
-                            <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
-                                <TextBlock Text="Mental&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
-                                <muxc:NumberBox x:Name="MentalPoolNumberBox" Tag="MentalPool" Value="{x:Bind CharSheet.CharStats.MentalPool, Mode=TwoWay}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
                             </StackPanel>
                             <!--END Pool-->
-                            <!--Super Stat 01-->
-                            <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource SupStatStackPannel}">
-                                <TextBlock Text="Mind:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Mind" Tag="Mind" Value="{x:Bind CharSheet.CharStats.Mind, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Super Stat 01-->
-                            <!--Sub Stat 01-->
-                            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                            <!--Target-->
+                            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
                                 <StackPanel>
-                                    <Slider x:Name="p1IntelligenceStepSlider" Style="{StaticResource SubStatSlider}"/>
+                                    <Slider x:Name="p1TargetStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="Intelligence:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Intelligence" Tag="Intelligence" Value="{x:Bind CharSheet.CharStats.Intelligence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    <TextBlock Text="Target:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Target" Tag="Target" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Target, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
                                 </StackPanel>
                             </StackPanel>
-                            <!--END Sub Stat 01-->
-                            <!--Sub Stat 02-->
-                            <StackPanel Grid.Column="0" Grid.Row="1 " Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                            <!--END Target-->
+                            <!--Damage-->
+                            <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
                                 <StackPanel>
-                                    <Slider x:Name="p1EgoStepSlider" Style="{StaticResource SubStatSlider}"/>
+                                    <Slider x:Name="p1DamageStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="Ego:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Ego" Value="{x:Bind CharSheet.CharStats.Ego, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    <TextBlock Text="Damage:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Damage" Tag="Damage" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Damage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
                                 </StackPanel>
                             </StackPanel>
-                            <!--END Sub Stat 02-->
-                            <!--Super Stat 02-->
-                            <StackPanel Grid.Column="1" Grid.Row="2" Style="{StaticResource SupStatStackPannel}">
-                                <TextBlock Text="Willpower:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Willpower" Tag="Mind" Value="{x:Bind CharSheet.CharStats.Willpower, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Super Stat 02-->
-                            <!--Sub Stat 01-->
+                            <!--END Damage-->
+                            <!--Accuracy-->
                             <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
                                 <StackPanel>
-                                    <Slider x:Name="p1KnowledgeStepSlider" Style="{StaticResource SubStatSlider}"/>
+                                    <Slider x:Name="p1AccuracyStepSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="Knowledge:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Knowledge" Tag="Knowledge" Value="{x:Bind CharSheet.CharStats.Knowledge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    <TextBlock Text="Accuracy:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                                    <muxc:NumberBox x:Name="p1Accuracy" Tag="Accuracy" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Accuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
                                 </StackPanel>
                             </StackPanel>
-                            <!--END Sub Stat 01-->
-                            <!--Sub Stat 02-->
-                            <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                            <!--END Accuracy-->
+                            <!--Attack Type-->
+                            <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Style="{StaticResource SubStatBlockStackPannel}">
                                 <StackPanel>
-                                    <Slider x:Name="p1SelfDisciplineStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Self Discipline:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1SelfDiscipline" Tag="SelfDiscipline" Value="{x:Bind CharSheet.CharStats.SelfDiscipline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                                    <ComboBox x:Name="p1OffenceTypeComboBox" Header="Offence Type:" SelectedIndex="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.OffenceType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TypeComboBox}">
+                                        <ComboBoxItem>Melee Strike</ComboBoxItem>
+                                        <ComboBoxItem>Ranged Strike</ComboBoxItem>
+                                        <ComboBoxItem>Grapple</ComboBoxItem>
+                                    </ComboBox>
                                 </StackPanel>
                             </StackPanel>
-                            <!--END Sub Stat 02-->
+                            <!--END Attack Type-->
+                            <!--Defence Type-->
+                            <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Vertical" Style="{StaticResource SubStatBlockStackPannel}">
+                                <StackPanel>
+                                    <ComboBox x:Name="p1DefenceTypeComboBox" Header="Defence Type:" SelectedIndex="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.DefenceType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TypeComboBox}">
+                                        <ComboBoxItem>Block</ComboBoxItem>
+                                        <ComboBoxItem>Parry</ComboBoxItem>
+                                        <ComboBoxItem>Dodge</ComboBoxItem>
+                                    </ComboBox>
+                                </StackPanel>
+                            </StackPanel>
+                            <!--END Defence Type-->
                         </Grid>
                     </StackPanel>
-                    <!--END Mental Grid-->
-                    <!--Magic Grid-->
-                    <StackPanel>
-                        <TextBlock Text="Meta Stats:" Style="{StaticResource StandardStatHeadderTextBlock}"/>
-                        <Grid Width="250" Height="auto">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="55"/>
-                                <RowDefinition Height="55"/>
-                                <RowDefinition Height="55"/>
-                            </Grid.RowDefinitions>
-                            <!--IconLayout-->
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                <Canvas Width="Auto" Height="110">
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline09}"/>
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline10}"/>
-                                    <Polyline Style="{StaticResource SupStatToPoolStatPolyline05}"/>
-                                </Canvas>
-                            </StackPanel>
-                            <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                <Canvas Width="Auto" Height="110">
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline11}" />
-                                    <Polyline Style="{StaticResource SubStatToSupStatPolyline12}" />
-                                    <Polyline Style="{StaticResource SupStatToPoolStatPolyline06}"/>
-                                </Canvas>
-                            </StackPanel>
-                            <!--END Icon Layout-->
-                            <!--Pool-->
-                            <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource PoolStackPannel}">
-                                <TextBlock Text="Meta&#x0a;Pool" Style="{StaticResource PoolNameTextBlock}" />
-                                <muxc:NumberBox x:Name="MetaPoolNumberBox" Tag="MetaPool" Value="{x:Bind CharSheet.CharStats.MetaPool, Mode=TwoWay}" Style="{StaticResource PoolNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Pool-->
-                            <!--Super Stat 01-->
-                            <StackPanel Grid.Column="1" Grid.Row="0" Style="{StaticResource SupStatStackPannel}">
-                                <TextBlock Text="Power:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Power" Tag="Mind" Value="{x:Bind CharSheet.CharStats.Power, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Super Stat 01-->
-                            <!--Force-->
-                            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                                <StackPanel>
-                                    <Slider x:Name="p1ForceStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Force:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Force" Tag="Force" Value="{x:Bind CharSheet.CharStats.Force, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                                </StackPanel>
-                            </StackPanel>
-                            <!--END Force-->
-                            <!--Channeling-->
-                            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                                <StackPanel>
-                                    <Slider x:Name="p1ChannelingStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Channeling:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Channeling" Tag="Channeling" Value="{x:Bind CharSheet.CharStats.Channeling, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                                </StackPanel>
-                            </StackPanel>
-                            <!--END Channeling-->
-                            <!--Super Stat 02-->
-                            <StackPanel Grid.Column="1" Grid.Row="2" Style="{StaticResource SupStatStackPannel}">
-                                <TextBlock Text="Control:" Style="{StaticResource SupStatNameTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Control" Tag="Mind" Value="{x:Bind CharSheet.CharStats.Control, Mode=OneWay}" Style="{StaticResource SuperStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                            <!--END Super Stat 02-->
-                            <!--Manipulation-->
-                            <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                                <StackPanel>
-                                    <Slider x:Name="p1ManipulationStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Manipulation:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Manipulation" Tag="Manipulation" Value="{x:Bind CharSheet.CharStats.Manipulation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                                </StackPanel>
-                            </StackPanel>
-                            <!--END Manipulation-->
-                            <!--Reserve-->
-                            <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                                <StackPanel>
-                                    <Slider x:Name="p1ReserveStepSlider" Style="{StaticResource SubStatSlider}"/>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="Reserve:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                    <muxc:NumberBox x:Name="p1Reserve" Tag="Reserve" Value="{x:Bind CharSheet.CharStats.Reserve, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                                </StackPanel>
-                            </StackPanel>
-                            <!--END Reserve-->
-                        </Grid>
-                    </StackPanel>
-                    <!--END Magic Grid-->
+                    <!--END Quick Stats Settings-->
                 </StackPanel>
-                <!--END Standard Stats Panel-->
-                <!--Quick Stats Settings-->
-                <StackPanel x:Name="P1QuickStatsPanel" Visibility="Visible">
-                    <TextBlock>Quick Stats</TextBlock>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="123"/>
-                            <ColumnDefinition Width="123"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="55"/>
-                            <RowDefinition Height="55"/>
-                            <RowDefinition Height="55"/>
-                            <RowDefinition Height="55"/>
-                        </Grid.RowDefinitions>
-                        <!--Health-->
-                        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <Slider x:Name="p1HealthStepSlider" Style="{StaticResource SubStatSlider}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Health:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Health" Tag="Health" ValueChanged="ValueChanged" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Health, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Health-->
-                        <!--Endurance-->
-                        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <Slider x:Name="p1EnduranceStepSlider" Style="{StaticResource SubStatSlider}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Endurance:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Endurance" Tag="Endurance" Value="{x:Bind CharSheet.CharStatsQuick.Endurance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Endurance-->
-                        <!--Pool-->
-                        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <Slider x:Name="p1PoolStepSlider" Style="{StaticResource SubStatSlider}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Pool:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Pool" Tag="Pool" Value="{x:Bind CharSheet.CharStatsQuick.Pool, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Pool-->
-                        <!--Target-->
-                        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <Slider x:Name="p1TargetStepSlider" Style="{StaticResource SubStatSlider}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Target:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Target" Tag="Target" Value="{x:Bind CharSheet.CharStatsQuick.Target, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Target-->
-                        <!--Damage-->
-                        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <Slider x:Name="p1DamageStepSlider" Style="{StaticResource SubStatSlider}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Damage:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Damage" Tag="Damage" Value="{x:Bind CharSheet.CharStatsQuick.Damage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Damage-->
-                        <!--Accuracy-->
-                        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <Slider x:Name="p1AccuracyStepSlider" Style="{StaticResource SubStatSlider}"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Accuracy:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
-                                <muxc:NumberBox x:Name="p1Accuracy" Tag="Accuracy" Value="{x:Bind CharSheet.CharStatsQuick.Accuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Accuracy-->
-                        <!--Attack Type-->
-                        <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <ComboBox x:Name="p1OffenceTypeComboBox" Header="Offence Type:" Style="{StaticResource TypeComboBox}">
-                                    <ComboBoxItem>Melee Strike</ComboBoxItem>
-                                    <ComboBoxItem>Ranged Strike</ComboBoxItem>
-                                    <ComboBoxItem>Grapple</ComboBoxItem>
-                                </ComboBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Attack Type-->
-                        <!--Defence Type-->
-                        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Vertical" Style="{StaticResource SubStatBlockStackPannel}">
-                            <StackPanel>
-                                <ComboBox x:Name="p1DefenceTypeComboBox" Header="Defence Type:" Style="{StaticResource TypeComboBox}">
-                                    <ComboBoxItem>Block</ComboBoxItem>
-                                    <ComboBoxItem>Parry</ComboBoxItem>
-                                    <ComboBoxItem>Dodge</ComboBoxItem>
-                                </ComboBox>
-                            </StackPanel>
-                        </StackPanel>
-                        <!--END Defence Type-->
-                    </Grid>
-                </StackPanel>
-                <!--END Quick Stats Settings-->
-            </StackPanel>
+            </ContentControl>
             <!--Player Offence and Defence-->
-            <Grid Grid.Column="3">
-                <StackPanel>
-                    <local:StatsFrame></local:StatsFrame>
-                </StackPanel>
-            </Grid>
+            <StackPanel x:Name="PlayerOffenceDefenceStackPanel" Grid.Column="3" Visibility="Visible">
+                <TextBlock>Weapons Armor</TextBlock>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="123"/>
+                        <ColumnDefinition Width="123"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="55"/>
+                    </Grid.RowDefinitions>
+                    <!--Weapon-->
+                    <!--Weapon Damage-->
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource SubStatBlockStackPannel}">
+                        <StackPanel>
+                            <Slider x:Name="PlayerWeaponDamageSlider" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.StepStats.StepHealth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatSlider}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Offence Damage:" Style="{StaticResource SubStatHeaderTextBlock}"></TextBlock>
+                            <muxc:NumberBox x:Name="PlayerWeaponDamageNumberBox" Value="{x:Bind Path=SelectedCharacter.CurentCharacter.CharStatsQuick.Health, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SubStatNumberBox}"></muxc:NumberBox>
+                        </StackPanel>
+                    </StackPanel>
+                    <!--END Weapon Damage-->
+                </Grid>
+            </StackPanel>
             <!--END Player Offence and Defence-->
             <!--Player 01 End-->
 
@@ -459,17 +485,18 @@
             <StackPanel Grid.Column="4" Width="250" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
                     <TextBlock x:Name="TextBoxSteps" Text="Number of Steps:"/>
-                    <muxc:NumberBox x:Name="SimStepsNumberBox" Value="{x:Bind SimSettings.NumberOfSteps, Mode=TwoWay}" Style="{StaticResource SimSettingsNumberBox}"/>
+                    <muxc:NumberBox x:Name="SimStepsNumberBox" Value="{x:Bind SimSettings.NumberOfSteps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SimSettingsNumberBox}"/>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock x:Name="TextBoxItter" Text="Number of Itterations:"/>
-                    <muxc:NumberBox x:Name="SimItterNumberBox" Value="{x:Bind SimSettings.NumberOfItterations, Mode=TwoWay}" Style="{StaticResource SimSettingsNumberBox}"/>
+                    <TextBlock x:Name="TextBoxIter" Text="Number of Itterations:"/>
+                    <muxc:NumberBox x:Name="SimIterNumberBox" Value="{x:Bind SimSettings.NumberOfIterations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SimSettingsNumberBox}"/>
                 </StackPanel>
                 <TextBlock>Run:</TextBlock>
                 <ToggleSwitch x:Name="ToggleSwitchRunRoundCombat" OffContent="Round" OnContent="Combat"></ToggleSwitch>
-                <CheckBox x:Name="CheckBoxOutStep" IsChecked="True">Output Steps</CheckBox>
-                <CheckBox x:Name="CheckBoxOutRound" IsChecked="True">Output Round</CheckBox>
-                <Button x:Name="myButton" Content="Run Sim" Click="RunSim"/>
+                <CheckBox  IsChecked="{x:Bind Path=SimSettings.OutputStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Output Steps</CheckBox>
+                <CheckBox  IsChecked="{x:Bind Path=SimSettings.OutputIter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Output Iterations</CheckBox>
+                <CheckBox  IsChecked="{x:Bind Path=SimSettings.OutputRoll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Output Rolls</CheckBox>
+                <Button Content="Run Simulation" Click="RunSim"/>
             </StackPanel>
             <!--END Sim Settings-->
             <!--Output Window-->
@@ -479,8 +506,7 @@
                      ScrollViewer.VerticalScrollBarVisibility="Visible"
                      ></TextBox>
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="ButtonClearOutput" Content="Clear Output" ></Button>
-                    <Button Content="OutputShit" Click="Button_Click"/>
+                    <Button Click="ClearWindowButton_Click" Content="Clear Output" ></Button>
                 </StackPanel>
             </StackPanel>
             <!--END Output Window-->

@@ -9,7 +9,7 @@ namespace GaiaSystemTester
     {
     class SimQuickCombat
         {
-        public void RunSimulation(List<CharacterSheet> charSheets, SimSettings settings, ref TextBox textBox)
+        public void RunSimulation()
         {
 
         }

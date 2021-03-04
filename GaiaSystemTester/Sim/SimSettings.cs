@@ -12,14 +12,20 @@ namespace GaiaSystemTester
         {
         public SimSettings()
             {
+            _outputRoll = true;
+            _outputIter = true;
+            _outputStep = true;
             _steps = 1;
-            _itters = 1;
+            _iters = 1;
             _simType = 0;
             }
 
         private int _steps;
-        private int _itters;
+        private int _iters;
         private int _simType;
+        private bool _outputRoll;
+        private bool _outputIter;
+        private bool _outputStep;
 
         public int NumberOfSteps
             {
@@ -29,20 +35,62 @@ namespace GaiaSystemTester
                 if(_steps != value)
                     {
                     _steps = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NumberOfSteps"));
                     }
                 }
             }
-        public int NumberOfItterations
+        public int NumberOfIterations
             {
-            get { return _itters; }
+            get { return _iters; }
             set
                 {
-                if(_itters != value)
+                if(_iters != value)
                     {
-                    _itters = value;
+                    _iters = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NumberOfItterations"));
                     }
                 }
             }
+
+        public bool OutputRoll
+            {
+            get { return _outputRoll; }
+            set
+                {
+                if(_outputRoll != value)
+                    {
+                    _outputRoll = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("OutputRoll"));
+                    }
+                }
+            }
+
+        public bool OutputIter
+            {
+            get { return _outputIter; }
+            set
+                {
+                if(_outputIter != value)
+                    {
+                    _outputIter = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("OutputIter"));
+                    }
+                }
+            }
+
+        public bool OutputStep
+            {
+            get { return _outputStep; }
+            set
+                {
+                if(_outputStep != value)
+                    {
+                    _outputStep = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("OutputStep"));
+                    }
+                }
+            }
+
 
         public int SimulationType
             {
@@ -52,6 +100,7 @@ namespace GaiaSystemTester
                 if(_simType != value)
                     {
                     _simType = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SimulationType"));
                     }
                 }
             }

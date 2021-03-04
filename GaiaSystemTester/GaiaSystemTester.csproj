@@ -123,7 +123,9 @@
     <Compile Include="CharacterSheet\CharacterCombatStats.cs" />
     <Compile Include="CharacterSheet\CharacterSheet.cs" />
     <Compile Include="CharacterSheet\CharacterStats.cs" />
+    <Compile Include="CharacterSheet\CharacterStatsBackup.cs" />
     <Compile Include="CharacterSheet\CharacterStatsQuick.cs" />
+    <Compile Include="CharacterSheet\CharacterStepStats.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -134,8 +136,8 @@
     <Compile Include="Sim\RunIterations.cs" />
     <Compile Include="Sim\RunSim.cs" />
     <Compile Include="Sim\RunSteps.cs" />
-    <Compile Include="Sim\SimQuick.cs" />
-    <Compile Include="Sim\SimQuickCombat.cs" />
+    <Compile Include="Sim\RunIterQuick.cs" />
+    <Compile Include="Sim\RunIterCombat.cs" />
     <Compile Include="Sim\SimSettings.cs" />
     <Compile Include="FramesUI\StatsFrame.xaml.cs">
       <DependentUpon>StatsFrame.xaml</DependentUpon>
