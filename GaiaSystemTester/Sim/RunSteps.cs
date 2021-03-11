@@ -30,16 +30,16 @@ namespace GaiaSystemTester.Sim
                 {
                 if(!sheet.StatsToUse)
                     {
-                        sheet.CharStatsQuick.Health += sheet.StepStats.StepHealth;
-                        sheet.CharStatsQuick.Endurance += sheet.StepStats.StepEndurance;
-                        sheet.CharStatsQuick.Pool += sheet.StepStats.StepPool;
-                        sheet.CharStatsQuick.Target += sheet.StepStats.StepTarget;
-                        sheet.CharStatsQuick.Accuracy += sheet.StepStats.StepAccuracy;
-                        sheet.CharStatsQuick.Damage += sheet.StepStats.StepDamage;
+                        sheet.StatsQuick.Health += sheet.StepStats.StepHealth;
+                        sheet.StatsQuick.Endurance += sheet.StepStats.StepEndurance;
+                        sheet.StatsQuick.Pool += sheet.StepStats.StepPool;
+                        sheet.StatsQuick.Target += sheet.StepStats.StepTarget;
+                        sheet.StatsQuick.Accuracy += sheet.StepStats.StepAccuracy;
+                        sheet.StatsQuick.Damage += sheet.StepStats.StepDamage;
                     }
                 else
                     {
-                    sheet.CharStats.Strength += sheet.StepStats.StepStrength;
+                    sheet.Attributes.Strength += sheet.StepStats.StepStrength;
                     }
                 sheet.SetCombatStats();
                 }
@@ -49,13 +49,15 @@ namespace GaiaSystemTester.Sim
             foreach(CharacterSheet sheet in _CharacterSheets)
                 {
                 sheet.CombatStats.TotalSuccesses = 0;
+                sheet.CombatStats.TotalWins = 0;
                 }
-        }
+            }
         private void OutputSteps()
         {
             foreach(CharacterSheet sheet in _CharacterSheets)
                 {
                 decimal avgSuc;
+                decimal winPerc = ((decimal)sheet.CombatStats.TotalWins / (decimal)_SimSettings.NumberOfIterations) * 100M;
                 if(sheet.CombatStats.TotalSuccesses>0)
                     {
                     avgSuc = ((decimal)sheet.CombatStats.TotalSuccesses / (decimal)_SimSettings.NumberOfIterations);
@@ -65,9 +67,9 @@ namespace GaiaSystemTester.Sim
                     avgSuc = 0M;
                     }
                 _String.Append(
-                $"Name: {sheet.CharBio.Name}\n"+
-                $"Target: {sheet.CombatStats.CurrentTarget}-Pool: {sheet.CombatStats.CurrentPool}\n"+
-                $"Averave Successes: {avgSuc} Total Successes: {sheet.CombatStats.TotalSuccesses}\n"
+                $"|Name: {sheet.Bio.Name}\n"+
+                $"|Target: {sheet.CombatStats.CurrentTarget}|--|Pool: {sheet.CombatStats.CurrentPool}\n" +
+                $"|Averave Successes: {avgSuc} |--|Win %: {winPerc}\n\n"
                 );
                 }
             }

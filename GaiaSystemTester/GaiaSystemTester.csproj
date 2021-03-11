@@ -116,16 +116,28 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ActionStatsSelectedSkill.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CharacterSheet\CharacterAttribues.cs" />
+    <Compile Include="CharacterSheet\CharacterAttributesOther.cs" />
     <Compile Include="CharacterSheet\CharacterBio.cs" />
     <Compile Include="CharacterSheet\CharacterCombatStats.cs" />
+    <Compile Include="CharacterSheet\CharacterHealth.cs" />
+    <Compile Include="CharacterSheet\CharacterMath.cs" />
     <Compile Include="CharacterSheet\CharacterSheet.cs" />
+    <Compile Include="CharacterSheet\CharacterSkills.cs" />
     <Compile Include="CharacterSheet\CharacterStats.cs" />
     <Compile Include="CharacterSheet\CharacterStatsBackup.cs" />
+    <Compile Include="CharacterSheet\CharacterStatsDefence.cs" />
+    <Compile Include="CharacterSheet\CharacterStatsOffence.cs" />
     <Compile Include="CharacterSheet\CharacterStatsQuick.cs" />
     <Compile Include="CharacterSheet\CharacterStepStats.cs" />
+    <Compile Include="CharacterSheet\Skill.cs" />
+    <Compile Include="CharacterSheet\Skills\Unskilled.cs" />
+    <Compile Include="CharacterSheet\Skills\Brawl.cs" />
+    <Compile Include="CharacterSheet\Skills\SkillList.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

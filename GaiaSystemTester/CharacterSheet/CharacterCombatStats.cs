@@ -20,6 +20,8 @@ namespace GaiaSystemTester
             _currentDamage = 10;
             _currentSuccesses = 0;
             _totalSuccesses = 0;
+            _totalWins = 0;
+            _winPercent = 0M;
             }
         private int _currentHealth;
         private int _currentEndurance;
@@ -31,6 +33,8 @@ namespace GaiaSystemTester
         private List<int> _currentRolledPool;
         private int _currentSuccesses;
         private int _totalSuccesses;
+        private int _totalWins;
+        private decimal _winPercent;
 
         public int CurrentHealth
             {
@@ -139,6 +143,30 @@ namespace GaiaSystemTester
                 if(value != _totalSuccesses)
                     {
                     _totalSuccesses = value;
+                    }
+                }
+            }
+
+        public int TotalWins
+            {
+            get { return _totalWins; }
+            set
+                {
+                if(value != _totalWins)
+                    {
+                    _totalWins = value;
+                    }
+                }
+            }
+
+        public decimal WinPercent
+            {
+            get { return _winPercent; }
+            set
+                {
+                if(value != _winPercent)
+                    {
+                    _winPercent = value;
                     }
                 }
             }

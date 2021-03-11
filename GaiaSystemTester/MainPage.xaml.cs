@@ -27,28 +27,22 @@ namespace GaiaSystemTester
         public MainPage()
             {
             this.InitializeComponent();
-            this.CharSheet = new CharacterSheet();
             this.SimSettings = new SimSettings();
             this.SelectedCharacter = new SelectedCharacter();
             this.CharacterSheets = new ObservableCollection<CharacterSheet>();
+            this.SkillList = new Skills.SkillList();
+            this.SkilledStats = new ActionStatsSelectedSkill();
             CharacterSheets.Add(new CharacterSheet("Fulkan"));
+            CharacterSheets[0].NameOfCurrentSkill = "Un-skilled";
+            CharactersListView.SelectedIndex = 0;
+            SkillSelect_ListBox.SelectedIndex = 0;
             }
-        public IList<CharacterSheet> CharacterSheets { get; set; }
-        public CharacterSheet CharSheet { get; set; }
+        private CharacterSheet BaseSheet{ get; set; }
+        public ActionStatsSelectedSkill SkilledStats { get; set; }
+        public Skills.SkillList SkillList { get; }
+        public ObservableCollection<CharacterSheet> CharacterSheets { get; set; }
         public SimSettings SimSettings { get; set; }
         public SelectedCharacter SelectedCharacter { get; set; }
-
-
-
-        private void NumberBoxValueChanged(MUXC.NumberBox sender, MUXC.NumberBoxValueChangedEventArgs args)
-            {
-            //if(CharSheet != null)
-            //    {
-            //    string outString;
-            //    outString = $"{sender.Tag.ToString()}:  {sender.Value}\n";
-            //    TextBoxOutputWindow.Text += outString;
-            //    }
-            }
 
         private void StatsSelectToggleSwitch_Toggled(Object sender, RoutedEventArgs e)
             {
@@ -56,23 +50,26 @@ namespace GaiaSystemTester
             if(toggleSwitch.IsOn)
                 {
                 P1StandardStatsPanel.Visibility = Visibility.Visible;
-                P1QuickStatsPanel.Visibility = Visibility.Collapsed;
+                QuickStatsPanel.Visibility = Visibility.Collapsed;
                 }
             if(!toggleSwitch.IsOn)
                 {
                 P1StandardStatsPanel.Visibility = Visibility.Collapsed;
-                P1QuickStatsPanel.Visibility = Visibility.Visible;
+                QuickStatsPanel.Visibility = Visibility.Visible;
                 }
 
             }
             
-        private void ValueChanged(MUXC.NumberBox sender, MUXC.NumberBoxValueChangedEventArgs args)
-            {
-            //TextBoxOutputWindow.Text += CharacterSheets[0].CharStatsQuick.Health.ToString();
-            }
-
         private void RunSim(object sender, RoutedEventArgs e)
             {
+            if(CharacterSheets.Count()==0)
+                {
+                TextBoxOutputWindow.Text += "Please Create a Character to run simulation.";
+                }
+            else if(CharacterSheets.Count()<2 && SimSettings.SimulationType > 0)
+                {
+                TextBoxOutputWindow.Text += "Please Create 2 Characters to run simulation.";
+                }
             Sim.DiceRoller diceRoller = new Sim.DiceRoller(CharacterSheets, SimSettings, textBoxOutputWindow: ref TextBoxOutputWindow);
             diceRoller.RunSimulation();
             }
@@ -85,11 +82,12 @@ namespace GaiaSystemTester
         private void AddCharacter(object sender, RoutedEventArgs e)
             {
             string name = CharacterToAddNameTextBox.Text;
-            CharacterSheets.Add(new CharacterSheet(name));
-            CharactersListView.ItemsSource = CharacterSheets;
+            CharacterSheet character = new CharacterSheet(name);
+            character.RefreshStats();
+            CharacterSheets.Add(character);
             }
 
-        private void CharactersListView_ItemClick(object sender, SelectionChangedEventArgs e)
+        private void CharactersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
             {
             ListView view = (ListView)sender;
             if(view.SelectedIndex >= 0 && view.SelectedIndex <= CharacterSheets.Count)
@@ -108,6 +106,11 @@ namespace GaiaSystemTester
                 PlayerStatsPannelContentControl.IsEnabled = true;
                 }
             }
+
+        private void Reset_Character_Button_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedCharacter.CurentCharacter.DefaultStats();
+        }
 
         private void Remove_Character_Button_Click(object sender, RoutedEventArgs e)
             {
@@ -128,6 +131,47 @@ namespace GaiaSystemTester
                 SelectedCharacter.CurentCharacter = null;
                 PlayerStatsPannelContentControl.IsEnabled = false;
                 }
+            }
+
+        private void AddSkill_Button_Click(object sender, RoutedEventArgs e)
+            {
+            AddSkill_PopUp.IsOpen = !AddSkill_PopUp.IsOpen;
+            }
+
+        private void SkillSelect_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            {
+            ListBox listBox = (ListBox)sender;
+            int index = listBox.SelectedIndex;
+            if(index > -1)
+                {
+                SelectedCharacter.CurentCharacter.Skills.AddSkill(SkillList.SkillSelectionList[index]);
+                }
+            if(AddSkill_PopUp.IsOpen)
+                {
+                AddSkill_PopUp.IsOpen = false;
+                };
+            }
+
+        private void CharactersSkillsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            {
+            ListView listView = (ListView)sender;
+            int index = listView.SelectedIndex;
+            if(index > -1)
+                {
+                SelectedCharacter.CurentCharacter.SkillModList = SelectedCharacter.CurentCharacter.Skills.SkillList[index].ModList;
+                SelectedCharacter.CurentCharacter.NameOfCurrentSkill = SelectedCharacter.CurentCharacter.Skills.SkillList[index].Name;
+                SelectedCharacter.CurentCharacter.RefreshStats();
+                }
+            }
+
+        private void AttributeValue_NumberBox_ValueChanged(MUXC.NumberBox sender, MUXC.NumberBoxValueChangedEventArgs args)
+            {
+            SelectedCharacter.CurentCharacter.RefreshStats();
+            }
+
+        private void SkillRank_NumberBox_ValueChanged(MUXC.NumberBox sender, MUXC.NumberBoxValueChangedEventArgs args)
+            {
+            SelectedCharacter.CurentCharacter.RefreshStats();
             }
         }
     }

@@ -33,7 +33,7 @@ namespace GaiaSystemTester.Sim
             foreach(CharacterSheet sheet in _CharacterSheets)
                 {
                 _String.Append(
-                $"Character: {sheet.CharBio.Name}\n" +
+                $"Character: {sheet.Bio.Name}\n" +
                 $"Rolls: -"
                 );
                 foreach(int roll in sheet.CombatStats.CurrentRolledPool)

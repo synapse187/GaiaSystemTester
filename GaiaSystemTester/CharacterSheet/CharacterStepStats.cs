@@ -23,10 +23,10 @@ namespace GaiaSystemTester
             _stepToughness = 0;
             _stepReflexes = 0;
             _stepCoordination = 0;
-            _stepIntelligence = 0;
-            _stepEgo = 0;
-            _stepKnowledge = 0;
-            _stepSelfDiscipline = 0;
+            _stepIntellect = 0;
+            _stepWisdom = 0;
+            _stepInstinct = 0;
+            _stepDiscipline = 0;
             _stepForce = 0;
             _stepChanneling = 0;
             _stepManipulation = 0;
@@ -44,10 +44,10 @@ namespace GaiaSystemTester
         private int _stepToughness;
         private int _stepReflexes;
         private int _stepCoordination;
-        private int _stepIntelligence;
-        private int _stepEgo;
-        private int _stepKnowledge;
-        private int _stepSelfDiscipline;
+        private int _stepIntellect;
+        private int _stepWisdom;
+        private int _stepInstinct;
+        private int _stepDiscipline;
         private int _stepForce;
         private int _stepChanneling;
         private int _stepManipulation;
@@ -131,36 +131,36 @@ namespace GaiaSystemTester
                 if(_stepCoordination != value) { _stepCoordination = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepCoordination")); }
                 }
             }
-        public int StepIntelligence
+        public int StepIntellect
             {
-            get { return _stepIntelligence; }
+            get { return _stepIntellect; }
             set
                 {
-                if(_stepIntelligence != value) { _stepIntelligence = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepIntelligence")); }
+                if(_stepIntellect != value) { _stepIntellect = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepIntellect")); }
                 }
             }
-        public int StepEgo
+        public int StepWisdom
             {
-            get { return _stepEgo; }
+            get { return _stepWisdom; }
             set
                 {
-                if(_stepEgo != value) { _stepEgo = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepEgo")); }
+                if(_stepWisdom != value) { _stepWisdom = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepWisdom")); }
                 }
             }
-        public int StepKnowledge
+        public int StepInstinct
             {
-            get { return _stepKnowledge; }
+            get { return _stepInstinct; }
             set
                 {
-                if(_stepKnowledge != value) { _stepKnowledge = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepKnowledge")); }
+                if(_stepInstinct != value) { _stepInstinct = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepInstinct")); }
                 }
             }
-        public int StepSelfDiscipline
+        public int StepDiscipline
             {
-            get { return _stepSelfDiscipline; }
+            get { return _stepDiscipline; }
             set
                 {
-                if(_stepSelfDiscipline != value) { _stepSelfDiscipline = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepSelfDiscipline")); }
+                if(_stepDiscipline != value) { _stepDiscipline = value; this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StepDiscipline")); }
                 }
             }
         public int StepForce

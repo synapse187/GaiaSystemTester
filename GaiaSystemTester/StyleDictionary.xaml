@@ -59,6 +59,16 @@
         <Setter Property="Width" Value="70"/>
     </Style>
     <!--Sub Stat Block-->
+    <Style TargetType="muxc:NumberBox" x:Key="StatBonusNumberBox">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Margin" Value="0,1,-50,-18"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX=".5" ScaleY=".5"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style TargetType="StackPanel" x:Key="SubStatBlockStackPannel">
         <Setter Property="Width" Value="125"/>
         <Setter Property="Height" Value="55"/>

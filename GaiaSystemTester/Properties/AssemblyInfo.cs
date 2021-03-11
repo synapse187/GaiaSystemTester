@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GaiaSystemTester")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Omega Systems L.L.C.")]
 [assembly: AssemblyProduct("GaiaSystemTester")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Gaia Table Top R.P.G.")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:

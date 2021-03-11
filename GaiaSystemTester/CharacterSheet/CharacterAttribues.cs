@@ -8,14 +8,10 @@ using System.Runtime.CompilerServices;
 
 namespace GaiaSystemTester
     {
-    public class CharacterStats : INotifyPropertyChanged
+    public class CharacterAttributes : INotifyPropertyChanged
         {
-        public CharacterStats()
+        public CharacterAttributes()
             {
-            _hits = 10;
-            _endurance = 10;
-            _initative = 10;
-            _speed = 10;
             _physicalPool = 5;
             _body = 5;
             _strength = 10;
@@ -37,17 +33,8 @@ namespace GaiaSystemTester
             _control = 5;
             _manipulation = 10;
             _contain = 10;
-            this.skillMods = new List<int> {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-            this.Offence = new CharacterStatsOffence();
-            this.Defence = new CharacterStatsDefence();
-            RefreshStats();
             }
 
-        private int _hits;
-        private int _endurance;
-        private int _initative;
-        private int _speed;
-        
         private int _physicalPool;
         private int _body;
         private int _strength;
@@ -69,7 +56,7 @@ namespace GaiaSystemTester
         private int _control;
         private int _manipulation;
         private int _contain;
-        
+
         private int _bonusStrength;
         private int _bonusToughness;
         private int _bonusReflexes;
@@ -82,59 +69,6 @@ namespace GaiaSystemTester
         private int _bonusChanneling;
         private int _bonusManipulation;
         private int _bonusReserve;
-
-        //Secondary Stats
-        public int Hits
-            {
-            get { return _hits; }
-            set
-                {
-                if(_hits != value)
-                    {
-                    _hits = value;
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Hits"));
-                    }
-                }
-            }
-
-        public int Endurance
-            {
-            get { return _endurance; }
-            set
-                {
-                if(_endurance != value)
-                    {
-                    _endurance = value;
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Endurance"));
-                    }
-                }
-            }
-
-        public int Initative
-            {
-            get { return _initative; }
-            set
-                {
-                if(_initative != value)
-                    {
-                    _initative = value;
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Initative"));
-                    }
-                }
-            }
-
-        public int Speed
-            {
-            get { return _speed; }
-            set
-                {
-                if(_speed != value)
-                    {
-                    _speed = value;
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Speed"));
-                    }
-                }
-            }
 
         //Physical Stats
         public int PhysicalPool
@@ -171,7 +105,7 @@ namespace GaiaSystemTester
                 if(_strength != value)
                     {
                     _strength = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Strength"));
                     }
                 }
@@ -184,7 +118,7 @@ namespace GaiaSystemTester
                 if(_bonusStrength != value)
                     {
                     _bonusStrength = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusStrength"));
                     }
                 }
@@ -198,7 +132,7 @@ namespace GaiaSystemTester
                 if(_toughness != value)
                     {
                     _toughness = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Toughness"));
                     }
                 }
@@ -211,7 +145,7 @@ namespace GaiaSystemTester
                 if(_bonusToughness != value)
                     {
                     _bonusToughness = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusToughness"));
                     }
                 }
@@ -238,7 +172,7 @@ namespace GaiaSystemTester
                 if(_reflexes != value)
                     {
                     _reflexes = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Reflexes"));
                     }
                 }
@@ -251,7 +185,7 @@ namespace GaiaSystemTester
                 if(_bonusReflexes != value)
                     {
                     _bonusReflexes = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusReflexes"));
                     }
                 }
@@ -265,7 +199,7 @@ namespace GaiaSystemTester
                 if(_coordination != value)
                     {
                     _coordination = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Coordination"));
                     }
                 }
@@ -278,7 +212,7 @@ namespace GaiaSystemTester
                 if(_bonusCoordination != value)
                     {
                     _bonusCoordination = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusCoordination"));
                     }
                 }
@@ -319,7 +253,7 @@ namespace GaiaSystemTester
                 if(_intellect != value)
                     {
                     _intellect = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Intellect"));
                     }
                 }
@@ -332,7 +266,7 @@ namespace GaiaSystemTester
                 if(_bonusIntellect != value)
                     {
                     _bonusIntellect = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusIntellect"));
                     }
                 }
@@ -346,7 +280,7 @@ namespace GaiaSystemTester
                 if(_wisdom != value)
                     {
                     _wisdom = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Wisdom"));
                     }
                 }
@@ -359,7 +293,7 @@ namespace GaiaSystemTester
                 if(_bonusWisdom != value)
                     {
                     _bonusWisdom = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusWisdom"));
                     }
                 }
@@ -385,7 +319,7 @@ namespace GaiaSystemTester
                 if(_reaction != value)
                     {
                     _reaction = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Reaction"));
                     }
                 }
@@ -398,7 +332,7 @@ namespace GaiaSystemTester
                 if(_bonusReaction != value)
                     {
                     _bonusReaction = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusReaction"));
                     }
                 }
@@ -412,7 +346,7 @@ namespace GaiaSystemTester
                 if(_discipline != value)
                     {
                     _discipline = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Discipline"));
                     }
                 }
@@ -425,7 +359,7 @@ namespace GaiaSystemTester
                 if(_bonusDiscipline != value)
                     {
                     _bonusDiscipline = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusDiscipline"));
                     }
                 }
@@ -465,7 +399,7 @@ namespace GaiaSystemTester
                 if(_force != value)
                     {
                     _force = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Force"));
                     }
                 }
@@ -478,7 +412,7 @@ namespace GaiaSystemTester
                 if(_bonusForce != value)
                     {
                     _bonusForce = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusForce"));
                     }
                 }
@@ -492,7 +426,7 @@ namespace GaiaSystemTester
                 if(_channeling != value)
                     {
                     _channeling = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Channeling"));
                     }
                 }
@@ -505,7 +439,7 @@ namespace GaiaSystemTester
                 if(_bonusChanneling != value)
                     {
                     _bonusChanneling = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusChanneling"));
                     }
                 }
@@ -531,7 +465,7 @@ namespace GaiaSystemTester
                 if(_manipulation != value)
                     {
                     _manipulation = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Manipulation"));
                     }
                 }
@@ -544,7 +478,7 @@ namespace GaiaSystemTester
                 if(_bonusManipulation != value)
                     {
                     _bonusManipulation = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusManipulation"));
                     }
                 }
@@ -558,7 +492,7 @@ namespace GaiaSystemTester
                 if(_contain != value)
                     {
                     _contain = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Contain"));
                     }
                 }
@@ -571,177 +505,12 @@ namespace GaiaSystemTester
                 if(_bonusReserve != value)
                     {
                     _bonusReserve = value;
-                    RefreshStats();
+                    
                     this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BonusReserve"));
                     }
                 }
             }
         //Meta Stats END
-
-        private int SetBonus(int stat)
-            {
-            decimal usedStat = (((decimal)stat - 10.0M) + 1.0M) / 2.0M;
-            int bonus = 0;
-            bonus = (int)Math.Ceiling(usedStat);
-
-            return bonus;
-            }
-        private int SetSuperStat(int stat1, int stat2)
-            {
-            decimal superStat;
-            superStat = ((decimal)stat1 + (decimal)stat2) / 4.0M;
-            int superStatOut = (int)Math.Ceiling(superStat);
-            return (int)superStatOut;
-            }
-        private int SetPoolStat(int stat1, int stat2)
-            {
-            decimal poolStat;
-            poolStat = ((decimal)stat1 + (decimal)stat2) / 2.0M;
-            int poolStatOut = (int)Math.Ceiling(poolStat);
-            return (int)poolStatOut;
-            }
-        private List<int> SetActionBonus(int bonus1, int bonus2, int bonus3)
-            {
-            List<int> list = new List<int>();
-            decimal b02 = bonus2;
-            decimal b03 = bonus3;
-            list.Add(bonus1);
-            list.Add((int)Math.Ceiling(b02 / 2.0M));
-            list.Add((int)Math.Ceiling(b03 / 3.0M));
-            return list;
-            }
-
-        private void SetSuperPoolStats()
-            {
-            Body = SetSuperStat(Strength, Toughness);
-            Agility = SetSuperStat(Reflexes, Coordination);
-            PhysicalPool = SetPoolStat(Body, Agility);
-            Mind = SetSuperStat(Intellect, Wisdom);
-            Will = SetSuperStat(Reaction, Discipline);
-            MentalPool = SetPoolStat(Mind, Will);
-            Power = SetSuperStat(Force, Channeling);
-            Control = SetSuperStat(Manipulation, Contain);
-            MetaPool = SetPoolStat(Power, Control);
-            }
-        private void SetHealthMisc()
-            {
-            Hits = (_toughness + _discipline) / 2;
-            Endurance = (PhysicalPool + MentalPool) * 2;
-            Initative = (Reflexes + Reaction);
-            Speed = (Strength + Reflexes) / 2;
-            }
-        private void SetBonuses()
-            {
-            BonusStrength = SetBonus(Strength);
-            BonusToughness = SetBonus(Toughness);
-            BonusReflexes = SetBonus(Reflexes);
-            BonusCoordination = SetBonus(Coordination);
-            BonusIntellect = SetBonus(Intellect);
-            BonusWisdom = SetBonus(Wisdom);
-            BonusReaction = SetBonus(Reaction);
-            BonusDiscipline = SetBonus(Discipline);
-            BonusForce = SetBonus(Force);
-            BonusChanneling = SetBonus(Channeling);
-            BonusManipulation = SetBonus(Manipulation);
-            BonusReserve = SetBonus(Contain);
-            }
-        private void SetOffence()
-            {
-            List<int> list = new List<int>();
-            Offence.ThrowGlobal = BonusCoordination + BonusStrength + BonusIntellect;
-            // Melee
-            list = SetActionBonus(BonusStrength, BonusReflexes, BonusToughness);
-            Offence.StrikeMelee = list[0] + list[1] + list[2] + skillMods[0];
-
-            list = SetActionBonus(BonusWisdom, BonusCoordination, BonusStrength);
-            Offence.FeintMelee = list[0] + list[1] + list[2] + skillMods[1];
-
-            list = SetActionBonus(BonusToughness, BonusStrength, BonusIntellect);
-            Offence.HoldMelee = list[0] + list[1] + list[2] + skillMods[2];
-
-            //Ranged
-            list = SetActionBonus(BonusReflexes, BonusReaction, BonusCoordination);
-            Offence.StrikeRanged = list[0] + list[1] + list[2] + skillMods[6];
-
-            list = SetActionBonus(BonusDiscipline, BonusCoordination, BonusReflexes);
-            Offence.FeintRanged = list[0] + list[1] + list[2] + skillMods[7];
-
-            list = SetActionBonus(BonusCoordination, BonusReflexes, BonusReaction);
-            Offence.HoldRanged = list[0] + list[1] + list[2] + skillMods[8];
-
-            //Meta
-            list = SetActionBonus(BonusForce, BonusIntellect, BonusChanneling);
-            Offence.StrikeMeta = list[0] + list[1] + list[2] + skillMods[12];
-
-            list = SetActionBonus(BonusWisdom, BonusChanneling, BonusForce);
-            Offence.FeintMeta = list[0] + list[1] + list[2] + skillMods[13];
-
-            list = SetActionBonus(BonusManipulation, BonusForce, BonusDiscipline);
-            Offence.HoldMeta = list[0] + list[1] + list[2] + skillMods[14];
-            }
-        private void SetDefence()
-            {
-            List<int> list = new List<int>();
-            Defence.DodgeGlobal = BonusReflexes + BonusReaction + BonusCoordination;
-
-            //Melee
-            list = SetActionBonus(BonusToughness, BonusCoordination, BonusStrength);
-            Defence.BlockMelee = list[0] + list[1] + list[2] + skillMods[3];
-
-            list = SetActionBonus(BonusIntellect, BonusReflexes, BonusToughness);
-            Defence.ParryMelee = list[0] + list[1] + list[2] + skillMods[4];
-
-            list = SetActionBonus(BonusStrength, BonusToughness, BonusWisdom);
-            Defence.BreakMelee = list[0] + list[1] + list[2] + skillMods[5];
-
-            //Ranged
-            list = SetActionBonus(BonusCoordination, BonusDiscipline, BonusReflexes);
-            Defence.BlockRanged = list[0] + list[1] + list[2] + skillMods[9];
-
-            list = SetActionBonus(BonusReaction, BonusReflexes, BonusCoordination);
-            Defence.ParryRanged = list[0] + list[1] + list[2] + skillMods[10];
-
-            list = SetActionBonus(BonusReflexes, BonusCoordination, BonusDiscipline);
-            Defence.BreakRanged = list[0] + list[1] + list[2] + skillMods[11];
-
-            //Meta
-            list = SetActionBonus(BonusChanneling, BonusDiscipline, BonusForce);
-            Defence.BlockMeta = list[0] + list[1] + list[2] + skillMods[15];
-
-            list = SetActionBonus(BonusReaction, BonusChanneling, BonusManipulation);
-            Defence.ParryMeta = list[0] + list[1] + list[2] + skillMods[16];
-
-            list = SetActionBonus(BonusForce, BonusReaction, BonusChanneling);
-            Defence.BreakMeta = list[0] + list[1] + list[2] + skillMods[17];
-            }
-
-        public void RefreshStats()
-            {
-            SetSuperPoolStats();
-            SetHealthMisc();
-            SetBonuses();
-            SetOffence();
-            SetDefence();
-            }
-
-        public void DefaultStats()
-        {
-            Strength = 10;
-            Toughness = 10;
-            Reflexes = 10;
-            Coordination = 10;
-            Intellect = 10;
-            Wisdom = 10;
-            Reaction = 10;
-            Discipline = 10;
-            Force = 10;
-            Channeling = 10;
-            Manipulation = 10;
-            Contain = 10;
-        }
-        public List<int> skillMods;
-        public CharacterStatsOffence Offence { get; set; }
-        public CharacterStatsDefence Defence { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         }
     }
